@@ -41,41 +41,45 @@ class _CategouriesState extends State<Categouries> {
         child: FutureBuilder(
           future: getdata(),
           builder: (context , snapshot) {
-           return GridView.builder(
-                itemCount: list.length,
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 0.75
-                ),
-                itemBuilder: (context, position) =>
-                    GestureDetector(
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                            padding: EdgeInsets.all(20),
-                            height: 180,
-                            width: 160,
-                            decoration: BoxDecoration(
-                                color: Colors.indigo,
-                                borderRadius: BorderRadius.circular(15)
-                            ),
-                            child: Image.memory(
-                                Utility.dataFromBase64String(list[position]
-                                    .image)),
+            if(snapshot.connectionState == ConnectionState.done){
+              return GridView.builder(
+                  itemCount: list.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      childAspectRatio: 0.75
+                  ),
+                  itemBuilder: (context, position) => GestureDetector(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                          padding: EdgeInsets.all(20),
+                          height: 180,
+                          width: 160,
+                          decoration: BoxDecoration(
+                              color: Colors.indigo,
+                              borderRadius: BorderRadius.circular(15)
                           ),
-                          Text(snapshot.data[position].name,
-                            style: TextStyle(color: Colors.grey),),
-                          SizedBox(height: 5,),
-                          Text("${snapshot.data[position].price} \$")
-                        ],
-                      ),
-                      onTap: () {
-                        Navigator.push(context, MaterialPageRoute(
-                          builder: (context) => DetialItem(list[position]),));
-                      },
-                    )
-            );
+                          child: Image.memory(
+                              Utility.dataFromBase64String(list[position]
+                                  .image)),
+                        ),
+                        Text(snapshot.data[position].name,
+                          style: TextStyle(color: Colors.grey),),
+                        SizedBox(height: 5,),
+                        Text("${snapshot.data[position].price} \$")
+                      ],
+                    ),
+                    onTap: () {
+                      Navigator.push(context, MaterialPageRoute(
+                        builder: (context) => DetialItem(list[position]),));
+                    },
+                  )
+              );
+            }
+            else{
+              return CircularProgressIndicator();
+            }
           }
         ),
       ),
