@@ -106,7 +106,7 @@ class _AddItemState extends State<AddItem> {
     catch(err){
       print("Error");
     }
-    Http().postData("postData" , map );
+    Http().postData("postHandbag" , map );
   }
 
   File imageFile;

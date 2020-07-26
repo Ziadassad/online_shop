@@ -8,7 +8,7 @@ var arr = [];
 app.use(express.json());
 app.use(parser.urlencoded({ extended: true }));
 
-app.get("/get" ,async(req , res ,next)=>{
+app.get("/getHandbag" ,async(req , res ,next)=>{
   
   const [row] =  await databse.query("SELECT * FROM handbag",(err ,data)=>{
     // console.log(data);
@@ -17,13 +17,25 @@ app.get("/get" ,async(req , res ,next)=>{
   next();
 });
 
-app.post("/postData" , (req , res ,next)=>{
+app.post("/postHandbag" , (req , res ,next)=>{
   console.log("hi");
   const name = req.body.name;
   const price = req.body.price;
   const image = req.body.image;
   const description = req.body.description;
   var sql = "INSERT INTO handbag(name , price , image ,description) values (? ,? ,?,? );"
+  databse.query(sql , [name ,price , image,description]);
+  res.json({status : "ok"});
+ next();
+});
+
+app.post("/postT-shirt" , (req , res ,next)=>{
+  console.log("hi");
+  const name = req.body.name;
+  const price = req.body.price;
+  const image = req.body.image;
+  const description = req.body.description;
+  var sql = "INSERT INTO T_shirt(name , price , image ,description) values (? ,? ,?,? );"
   databse.query(sql , [name ,price , image,description]);
   res.json({status : "ok"});
  next();

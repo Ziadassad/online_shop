@@ -16,7 +16,7 @@ class _CategouriesState extends State<Categouries> {
   Future refresh() async {
     print("hi");
       list.clear();
-      List<ModelItem> list2 = await Http().getData("get");
+      List<ModelItem> list2 = await Http().getData("getHandbag");
       print(list.length);
       setState(() {
         list = list2;
