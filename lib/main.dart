@@ -14,15 +14,9 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  List<String> arr = ["hand bag", "jellewary", "foodware", "dress", "T-shirt"];
-
+  List<String> arr = ["hand bag", "T-shirt" ,"jellewary", "foodware", "dress"];
 
   int selectCategoury = 0;
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {
