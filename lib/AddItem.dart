@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:online_shop/Utility.dart';
 import 'package:online_shop/connectDatabase/http.dart';
@@ -10,81 +11,105 @@ class AddItem extends StatefulWidget {
 }
 
 class _AddItemState extends State<AddItem> {
+  List<String> Categouries = ["Handbag", "T-shirt"];
+  String select;
 
-  String name , price , description;
+  String name, price, description;
   var nameText = TextEditingController();
   var priceText = TextEditingController();
   var descText = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Text("add item"),
       ),
-      body: Container(
-        child: Padding(
-          padding: EdgeInsets.all(6),
-          child: Column(
-            children: <Widget>[
-              TextField(
-                controller: nameText,
-                decoration: InputDecoration(
-                  hintText: 'name'
-                ),
-                onChanged: (String value){
-                  name = value;
-                },
-              ),
-              TextField(
-                controller: priceText,
-                decoration: InputDecoration(
-                    hintText: 'price'
-                ),
-                onChanged: (String value){
-                  price = value;
-                },
-              ),
-              TextField(
-                controller: descText,
-                decoration: InputDecoration(
-                    hintText: 'description'
-                ),
-                onChanged: (String value){
-                  description = value;
-                },
-              ),
-
-              Container(
-                margin: EdgeInsets.only(top: 20),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(16)
-                ),
-                width: 150,
-                height: 150,
-                child: FlatButton(
-                  child: isImage(),
-                  onPressed: (){
-                    ShowDialig(context);
+      body: SingleChildScrollView(
+        child: Container(
+          child: Padding(
+            padding: EdgeInsets.all(6),
+            child: Column(
+              children: <Widget>[
+                TextField(
+                  controller: nameText,
+                  decoration: InputDecoration(hintText: 'name'),
+                  onChanged: (String value) {
+                    name = value;
                   },
                 ),
-              ),
-
-              Container(
-                width: 200,
-                margin: EdgeInsets.only(top: 200),
-                decoration: BoxDecoration(
-                  color: Colors.blue,
-                  borderRadius: BorderRadius.circular(16)
-                ),
-                child: FlatButton(
-                  child: Text("Save"),
-                  onPressed: (){
-                    postData();
+                TextField(
+                  controller: priceText,
+                  decoration: InputDecoration(hintText: 'price'),
+                  onChanged: (String value) {
+                    price = value;
                   },
                 ),
-              )
-            ],
+                TextField(
+                  controller: descText,
+                  decoration: InputDecoration(hintText: 'description'),
+                  onChanged: (String value) {
+                    description = value;
+                  },
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 20),
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(16)),
+                  width: 150,
+                  height: 150,
+                  child: FlatButton(
+                    child: isImage(),
+                    onPressed: () {
+                      ShowDialig(context);
+                    },
+                  ),
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 50),
+                  child: StatefulBuilder(
+                      builder: (BuildContext context, StateSetter setState2) {
+                    return Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          Padding(
+                            padding: EdgeInsets.all(8.0),
+                            child: DropdownButton(
+                              isExpanded: true,
+                              hint: Text("SELECT Categouries"),
+                              value: select,
+                              onChanged: (dropdownValueSelected) {
+                                setState2(() {
+                                  select = dropdownValueSelected;
+                                });
+                              },
+                              items: Categouries.map((String location) {
+                                return new DropdownMenuItem<String>(
+                                  child: new Text(location),
+                                  value: location,
+                                );
+                              }).toList(),
+                            ),
+                          ),
+                        ]);
+                  }),
+                ),
+                Container(
+                  width: 200,
+                  margin: EdgeInsets.only(top: 100),
+                  decoration: BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.circular(16)),
+                  child: FlatButton(
+                    child: Text("Save"),
+                    onPressed: () {
+                      postData();
+                    },
+                  ),
+                )
+              ],
+            ),
           ),
         ),
       ),
@@ -92,21 +117,41 @@ class _AddItemState extends State<AddItem> {
   }
 
   Map map;
-  postData()async{
-    try{
-      map = {'name' : name,
-             'price' : price,
-             'image' : imageString,
-        'description' : description
-    };
+
+  postData()async {
+    if (select == null) {
+      message("you must be select one Categouries");
+      return;
+    }
+
+    try {
+      map = {'name': name,
+        'price': price,
+        'image': imageString,
+        'description': description
+      };
       nameText.text = "";
       priceText.text = "";
       descText.text = "";
+      setState(() {
+        imageFile = null;
+      });
     }
-    catch(err){
+    catch (err) {
       print("Error");
     }
-    Http().postData("postHandbag" , map );
+    Http().postData("post${select}", map);
+  }
+
+  void message(String message) {
+    Fluttertoast.showToast(
+        msg: message,
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0);
   }
 
   File imageFile;

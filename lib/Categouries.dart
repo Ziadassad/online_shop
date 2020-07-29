@@ -6,6 +6,9 @@ import 'package:online_shop/connectDatabase/http.dart';
 import 'package:online_shop/model_iteam.dart';
 
 class Categouries extends StatefulWidget {
+  String _type;
+
+  Categouries(this._type);
 
   @override
   _CategouriesState createState() => _CategouriesState();
@@ -15,12 +18,15 @@ class _CategouriesState extends State<Categouries> {
 
   List<ModelItem> list = [];
   Future refresh() async {
-      list.clear();
-      List<ModelItem> list2 = await Http().getData("getHandbag");
-      setState(() {
-        list = list2;
-      });
+    String type = widget._type;
+    // print(type);
+    list.clear();
+    List<ModelItem> list2 = await Http().getData(type);
+    setState(() {
+      list = list2;
+    });
   }
+
   Future<List<ModelItem>> getdata() async {
     await Future.delayed(Duration(seconds: 1));
     return list;
@@ -57,7 +63,7 @@ class _CategouriesState extends State<Categouries> {
               );
             }
             else{
-              return CircularProgressIndicator();
+              return Center(child: CircularProgressIndicator());
             }
           }
         ),
