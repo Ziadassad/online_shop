@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:online_shop/Utility.dart';
-import 'package:online_shop/model_iteam.dart';
+import 'file:///Z:/FlutterApp/online_shop/lib/Model/model_iteam.dart';
 
 class itemCard extends StatelessWidget {
   int position;
